@@ -9,7 +9,6 @@ import io.dodn.commerce.storage.db.core.OrderItemRepository
 import io.dodn.commerce.storage.db.core.ReviewRepository
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
-
 @Component
 class ReviewPolicyValidator(
     private val orderItemRepository: OrderItemRepository,
@@ -17,7 +16,7 @@ class ReviewPolicyValidator(
 ) {
     fun validateNew(user: User, target: ReviewTarget): ReviewKey {
         if (target.type == ReviewTargetType.PRODUCT) {
-            val reviewKeys = orderItemRepository.findRecentOrderItemsForProduct(user.id, target.id, OrderState.PAID, LocalDateTime.now().minusDays(14), EntityStatus.ACTIVE)
+            val reviewKeys = orderItemRepository.findRecentOrderItemsForProduct(user.id, target.id, OrderState.PAID, LocalDateTime.now().minusDays(ReviewPolicy.ELIGIBLE_ORDER_DAYS), EntityStatus.ACTIVE)
                 .map { "ORDER_ITEM_${it.id}" }
 
             val existReviewKeys = reviewRepository.findByUserIdAndReviewKeyIn(user.id, reviewKeys).map { it.reviewKey }.toSet()
@@ -32,6 +31,6 @@ class ReviewPolicyValidator(
 
     fun validateUpdate(user: User, reviewId: Long) {
         val review = reviewRepository.findByIdAndUserId(reviewId, user.id) ?: throw CoreException(ErrorType.NOT_FOUND_DATA)
-        if (review.createdAt.plusDays(7).isBefore(LocalDateTime.now())) throw CoreException(ErrorType.REVIEW_UPDATE_EXPIRED)
+        if (review.createdAt.plusDays(ReviewPolicy.UPDATE_EXPIRE_DAYS).isBefore(LocalDateTime.now())) throw CoreException(ErrorType.REVIEW_UPDATE_EXPIRED)
     }
 }

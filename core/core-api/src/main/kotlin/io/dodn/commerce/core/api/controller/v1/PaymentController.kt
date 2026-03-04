@@ -1,13 +1,10 @@
 package io.dodn.commerce.core.api.controller.v1
 
+import io.dodn.commerce.core.api.assembler.PaymentAssembler
 import io.dodn.commerce.core.api.controller.v1.request.CreatePaymentRequest
 import io.dodn.commerce.core.api.controller.v1.response.CreatePaymentResponse
-import io.dodn.commerce.core.domain.OrderService
-import io.dodn.commerce.core.domain.OwnedCouponService
 import io.dodn.commerce.core.domain.PaymentService
-import io.dodn.commerce.core.domain.PointService
 import io.dodn.commerce.core.domain.User
-import io.dodn.commerce.core.enums.OrderState
 import io.dodn.commerce.core.support.response.ApiResponse
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,23 +15,14 @@ import java.math.BigDecimal
 @RestController
 class PaymentController(
     private val paymentService: PaymentService,
-    private val orderService: OrderService,
-    private val ownedCouponService: OwnedCouponService,
-    private val pointService: PointService,
+    private val paymentAssembler: PaymentAssembler,
 ) {
     @PostMapping("/v1/payments")
     fun create(
         user: User,
         @RequestBody request: CreatePaymentRequest,
     ): ApiResponse<CreatePaymentResponse> {
-        val order = orderService.getOrder(user, request.orderKey, OrderState.CREATED)
-        val ownedCoupons = ownedCouponService.getOwnedCouponsForCheckout(user, order.items.map { it.productId })
-        val pointBalance = pointService.balance(user)
-        val id = paymentService.createPayment(
-            order = order,
-            paymentDiscount = request.toPaymentDiscount(ownedCoupons, pointBalance),
-        )
-        return ApiResponse.success(CreatePaymentResponse(id))
+        return ApiResponse.success(CreatePaymentResponse(paymentAssembler.create(user, request)))
     }
 
     @PostMapping("/v1/payments/callback/success")

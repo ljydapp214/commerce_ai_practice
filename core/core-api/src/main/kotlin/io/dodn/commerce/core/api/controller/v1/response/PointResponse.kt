@@ -2,9 +2,7 @@ package io.dodn.commerce.core.api.controller.v1.response
 
 import io.dodn.commerce.core.domain.PointBalance
 import io.dodn.commerce.core.domain.PointHistory
-import io.dodn.commerce.core.enums.PointType
 import java.math.BigDecimal
-import java.time.LocalDateTime
 
 data class PointResponse(
     val userId: Long,
@@ -27,9 +25,3 @@ data class PointResponse(
         }
     }
 }
-
-data class PointHistoryResponse(
-    val type: PointType,
-    val amount: BigDecimal,
-    val appliedAt: LocalDateTime,
-)

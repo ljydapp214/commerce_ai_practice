@@ -4,8 +4,8 @@ import io.dodn.commerce.core.support.error.CoreException
 import io.dodn.commerce.core.support.error.ErrorType
 import io.dodn.commerce.storage.db.core.ReviewEntity
 import io.dodn.commerce.storage.db.core.ReviewRepository
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class ReviewManager(

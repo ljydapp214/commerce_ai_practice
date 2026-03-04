@@ -4,9 +4,9 @@ import io.dodn.commerce.core.support.error.CoreException
 import io.dodn.commerce.core.support.error.ErrorType
 import io.dodn.commerce.storage.db.core.PointBalanceRepository
 import io.dodn.commerce.storage.db.core.PointHistoryRepository
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class PointService(
     private val pointBalanceRepository: PointBalanceRepository,
     private val pointHistoryRepository: PointHistoryRepository,

@@ -2,6 +2,7 @@ package io.dodn.commerce.core.api.controller.v1.request
 
 import io.dodn.commerce.core.domain.OwnedCoupon
 import io.dodn.commerce.core.domain.PaymentDiscount
+import io.dodn.commerce.core.domain.PaymentPolicy
 import io.dodn.commerce.core.domain.PointBalance
 import java.math.BigDecimal
 
@@ -14,8 +15,8 @@ data class CreatePaymentRequest(
         return PaymentDiscount(
             ownedCoupons = ownedCoupons,
             pointBalance = pointBalance,
-            useOwnedCouponId = useOwnedCouponId ?: -1,
-            usePointAmount = usePoint ?: BigDecimal.valueOf(-1),
+            useOwnedCouponId = useOwnedCouponId ?: PaymentPolicy.NO_COUPON_ID,
+            usePointAmount = usePoint,
         )
     }
 }

@@ -6,11 +6,11 @@ import io.dodn.commerce.storage.db.core.OrderItemEntity
 import io.dodn.commerce.storage.db.core.OrderItemRepository
 import io.dodn.commerce.storage.db.core.SettlementTargetEntity
 import io.dodn.commerce.storage.db.core.SettlementTargetRepository
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
-@Service
+@Component
 class SettlementTargetLoader(
     private val settlementTargetRepository: SettlementTargetRepository,
     private val orderItemRepository: OrderItemRepository,

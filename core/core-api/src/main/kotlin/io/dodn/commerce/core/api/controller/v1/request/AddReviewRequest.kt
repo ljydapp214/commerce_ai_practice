@@ -1,6 +1,7 @@
 package io.dodn.commerce.core.api.controller.v1.request
 
 import io.dodn.commerce.core.domain.ReviewContent
+import io.dodn.commerce.core.domain.ReviewPolicy
 import io.dodn.commerce.core.domain.ReviewTarget
 import io.dodn.commerce.core.enums.ReviewTargetType
 import io.dodn.commerce.core.support.error.CoreException
@@ -20,7 +21,7 @@ data class AddReviewRequest(
 
     fun toContent(): ReviewContent {
         if (rate <= BigDecimal.ZERO) throw CoreException(ErrorType.INVALID_REQUEST)
-        if (rate > BigDecimal.valueOf(5.0)) throw CoreException(ErrorType.INVALID_REQUEST)
+        if (rate > ReviewPolicy.MAX_RATE) throw CoreException(ErrorType.INVALID_REQUEST)
         if (content.isEmpty()) throw CoreException(ErrorType.INVALID_REQUEST)
         return ReviewContent(rate, content)
     }

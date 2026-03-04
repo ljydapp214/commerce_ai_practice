@@ -1,13 +1,9 @@
 package io.dodn.commerce.core.api.controller.v1
 
+import io.dodn.commerce.core.api.assembler.ProductAssembler
 import io.dodn.commerce.core.api.controller.v1.response.ProductDetailResponse
 import io.dodn.commerce.core.api.controller.v1.response.ProductResponse
-import io.dodn.commerce.core.domain.CouponService
-import io.dodn.commerce.core.domain.ProductSectionService
 import io.dodn.commerce.core.domain.ProductService
-import io.dodn.commerce.core.domain.ReviewService
-import io.dodn.commerce.core.domain.ReviewTarget
-import io.dodn.commerce.core.enums.ReviewTargetType
 import io.dodn.commerce.core.support.OffsetLimit
 import io.dodn.commerce.core.support.response.ApiResponse
 import io.dodn.commerce.core.support.response.PageResponse
@@ -19,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ProductController(
     private val productService: ProductService,
-    private val productSectionService: ProductSectionService,
-    private val reviewService: ReviewService,
-    private val couponService: CouponService,
+    private val productAssembler: ProductAssembler,
 ) {
     @GetMapping("/v1/products")
     fun findProducts(
@@ -37,11 +31,7 @@ class ProductController(
     fun findProduct(
         @PathVariable productId: Long,
     ): ApiResponse<ProductDetailResponse> {
-        val product = productService.findProduct(productId)
-        val sections = productSectionService.findSections(productId)
-        val rateSummary = reviewService.findRateSummary(ReviewTarget(ReviewTargetType.PRODUCT, productId))
         // NOTE: 별도 API 가 나을까?
-        val coupons = couponService.getCouponsForProducts(listOf(productId))
-        return ApiResponse.success(ProductDetailResponse(product, sections, rateSummary, coupons))
+        return ApiResponse.success(productAssembler.findDetail(productId))
     }
 }

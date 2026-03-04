@@ -8,7 +8,7 @@ data class PaymentDiscount(
     private val ownedCoupons: List<OwnedCoupon>,
     private val pointBalance: PointBalance,
     val useOwnedCouponId: Long,
-    private val usePointAmount: BigDecimal,
+    private val usePointAmount: BigDecimal?,
 ) {
     val couponDiscount: BigDecimal
     val usePoint: BigDecimal
@@ -22,7 +22,7 @@ data class PaymentDiscount(
         }
 
         // 포인트 사용액 계산
-        usePoint = if (usePointAmount > BigDecimal.ZERO) {
+        usePoint = if (usePointAmount != null) {
             if (usePointAmount > pointBalance.balance) throw CoreException(ErrorType.POINT_EXCEEDS_BALANCE)
             usePointAmount
         } else {
@@ -31,7 +31,7 @@ data class PaymentDiscount(
     }
 
     fun paidAmount(orderPrice: BigDecimal): BigDecimal {
-        val amount = orderPrice - (couponDiscount + usePointAmount)
+        val amount = orderPrice - (couponDiscount + usePoint)
         if (amount < BigDecimal.ZERO) throw CoreException(ErrorType.PAYMENT_INVALID_AMOUNT)
         return amount
     }

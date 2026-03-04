@@ -55,6 +55,24 @@ class ProductFinder(
         )
     }
 
+    fun findAllActive(productIds: Set<Long>): Map<Long, Product> {
+        return productRepository.findByIdInAndStatus(productIds, EntityStatus.ACTIVE)
+            .associate { entity ->
+                entity.id to Product(
+                    id = entity.id,
+                    name = entity.name,
+                    thumbnailUrl = entity.thumbnailUrl,
+                    description = entity.description,
+                    shortDescription = entity.shortDescription,
+                    price = Price(
+                        costPrice = entity.costPrice,
+                        salesPrice = entity.salesPrice,
+                        discountedPrice = entity.discountedPrice,
+                    ),
+                )
+            }
+    }
+
     fun findSections(productId: Long): List<ProductSection> {
         return productSectionRepository.findByProductId(productId)
             .filter { it.isActive() }
