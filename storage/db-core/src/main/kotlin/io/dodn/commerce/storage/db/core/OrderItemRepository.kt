@@ -29,4 +29,24 @@ interface OrderItemRepository : JpaRepository<OrderItemEntity, Long> {
         fromDate: LocalDateTime,
         status: EntityStatus,
     ): List<OrderItemEntity>
+
+    @Query(
+        """
+        SELECT item.productId AS productId, COUNT(DISTINCT item.orderId) AS count
+        FROM OrderItemEntity item
+            JOIN OrderEntity orderEntity ON item.orderId = orderEntity.id
+        WHERE item.productId IN :productIds
+            AND orderEntity.state = :state
+            AND orderEntity.status = :status
+            AND item.status = :status
+            AND orderEntity.createdAt >= :fromDate
+        GROUP BY item.productId
+        """,
+    )
+    fun countByProductIds(
+        productIds: List<Long>,
+        state: OrderState,
+        status: EntityStatus,
+        fromDate: LocalDateTime,
+    ): List<OrderCountByProduct>
 }

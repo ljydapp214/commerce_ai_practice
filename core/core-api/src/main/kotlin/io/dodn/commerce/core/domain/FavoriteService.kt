@@ -14,4 +14,9 @@ class FavoriteService(
     fun addFavorite(user: User, productId: Long): Long = favoriteManager.add(user, productId)
 
     fun removeFavorite(user: User, productId: Long): Long = favoriteManager.remove(user, productId)
+
+    fun countRecentByProducts(productIds: List<Long>): Map<Long, Long> {
+        if (productIds.isEmpty()) return emptyMap()
+        return favoriteReader.countRecentByProducts(productIds)
+    }
 }

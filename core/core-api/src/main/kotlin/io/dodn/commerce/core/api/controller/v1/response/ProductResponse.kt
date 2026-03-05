@@ -11,9 +11,15 @@ data class ProductResponse(
     val costPrice: BigDecimal,
     val salesPrice: BigDecimal,
     val discountedPrice: BigDecimal,
+    val favoriteCount: Long,
+    val orderCount: Long,
 ) {
     companion object {
-        fun of(products: List<Product>): List<ProductResponse> {
+        fun of(
+            products: List<Product>,
+            favoriteCounts: Map<Long, Long>,
+            orderCounts: Map<Long, Long>,
+        ): List<ProductResponse> {
             return products.map {
                 ProductResponse(
                     name = it.name,
@@ -23,6 +29,8 @@ data class ProductResponse(
                     costPrice = it.price.costPrice,
                     salesPrice = it.price.salesPrice,
                     discountedPrice = it.price.discountedPrice,
+                    favoriteCount = favoriteCounts[it.id] ?: 0L,
+                    orderCount = orderCounts[it.id] ?: 0L,
                 )
             }
         }

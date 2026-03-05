@@ -8,6 +8,7 @@ import io.dodn.commerce.storage.db.core.OrderItemRepository
 import io.dodn.commerce.storage.db.core.OrderRepository
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Component
 class OrderReader(
@@ -58,5 +59,11 @@ class OrderReader(
                 )
             },
         )
+    }
+
+    fun countRecentByProducts(productIds: List<Long>): Map<Long, Long> {
+        val fromDate = LocalDateTime.now().minusDays(OrderPolicy.RECENT_COUNT_DAYS)
+        return orderItemRepository.countByProductIds(productIds, OrderState.PAID, EntityStatus.ACTIVE, fromDate)
+            .associate { it.productId to it.count }
     }
 }

@@ -13,4 +13,9 @@ class OrderService(
     fun getOrders(user: User): List<OrderSummary> = orderReader.readAll(user)
 
     fun getOrder(user: User, orderKey: String, state: OrderState): Order = orderReader.read(user, orderKey, state)
+
+    fun countRecentByProducts(productIds: List<Long>): Map<Long, Long> {
+        if (productIds.isEmpty()) return emptyMap()
+        return orderReader.countRecentByProducts(productIds)
+    }
 }

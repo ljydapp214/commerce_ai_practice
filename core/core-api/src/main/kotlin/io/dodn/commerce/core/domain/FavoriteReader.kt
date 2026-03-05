@@ -31,4 +31,10 @@ class FavoriteReader(
             result.hasNext(),
         )
     }
+
+    fun countRecentByProducts(productIds: List<Long>): Map<Long, Long> {
+        val fromDate = LocalDateTime.now().minusDays(FavoritePolicy.RECENT_COUNT_DAYS)
+        return favoriteRepository.countByProductIds(productIds, EntityStatus.ACTIVE, fromDate)
+            .associate { it.productId to it.count }
+    }
 }

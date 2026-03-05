@@ -3,7 +3,6 @@ package io.dodn.commerce.core.api.controller.v1
 import io.dodn.commerce.core.api.assembler.ProductAssembler
 import io.dodn.commerce.core.api.controller.v1.response.ProductDetailResponse
 import io.dodn.commerce.core.api.controller.v1.response.ProductResponse
-import io.dodn.commerce.core.domain.ProductService
 import io.dodn.commerce.core.support.OffsetLimit
 import io.dodn.commerce.core.support.response.ApiResponse
 import io.dodn.commerce.core.support.response.PageResponse
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ProductController(
-    private val productService: ProductService,
     private val productAssembler: ProductAssembler,
 ) {
     @GetMapping("/v1/products")
@@ -23,8 +21,7 @@ class ProductController(
         @RequestParam offset: Int,
         @RequestParam limit: Int,
     ): ApiResponse<PageResponse<ProductResponse>> {
-        val result = productService.findProducts(categoryId, OffsetLimit(offset, limit))
-        return ApiResponse.success(PageResponse(ProductResponse.of(result.content), result.hasNext))
+        return ApiResponse.success(productAssembler.findProducts(categoryId, OffsetLimit(offset, limit)))
     }
 
     @GetMapping("/v1/products/{productId}")
