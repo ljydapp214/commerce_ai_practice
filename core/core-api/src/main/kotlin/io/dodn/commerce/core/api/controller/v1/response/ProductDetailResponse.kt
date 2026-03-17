@@ -2,6 +2,7 @@ package io.dodn.commerce.core.api.controller.v1.response
 
 import io.dodn.commerce.core.domain.Coupon
 import io.dodn.commerce.core.domain.Product
+import io.dodn.commerce.core.domain.ProductOption
 import io.dodn.commerce.core.domain.ProductSection
 import io.dodn.commerce.core.domain.RateSummary
 import java.math.BigDecimal
@@ -18,6 +19,7 @@ data class ProductDetailResponse(
     val rateCount: Long,
     val sections: List<ProductSectionResponse>,
     val coupons: List<CouponResponse>,
+    val options: List<ProductOptionResponse>,
 ) {
     companion object {
         fun of(
@@ -25,6 +27,7 @@ data class ProductDetailResponse(
             sections: List<ProductSection>,
             rateSummary: RateSummary,
             coupons: List<Coupon>,
+            options: List<ProductOption>,
         ): ProductDetailResponse = ProductDetailResponse(
             name = product.name,
             thumbnailUrl = product.thumbnailUrl,
@@ -37,6 +40,7 @@ data class ProductDetailResponse(
             rateCount = rateSummary.count,
             sections = sections.map { ProductSectionResponse(it.type, it.content) },
             coupons = coupons.map { CouponResponse.of(it) },
+            options = options.map { ProductOptionResponse.of(it) },
         )
     }
 }

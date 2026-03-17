@@ -5,6 +5,7 @@ import io.dodn.commerce.core.api.controller.v1.response.ProductResponse
 import io.dodn.commerce.core.domain.CouponService
 import io.dodn.commerce.core.domain.FavoriteService
 import io.dodn.commerce.core.domain.OrderService
+import io.dodn.commerce.core.domain.ProductOptionService
 import io.dodn.commerce.core.domain.ProductSectionService
 import io.dodn.commerce.core.domain.ProductService
 import io.dodn.commerce.core.domain.ReviewService
@@ -22,6 +23,7 @@ class ProductAssembler(
     private val couponService: CouponService,
     private val favoriteService: FavoriteService,
     private val orderService: OrderService,
+    private val productOptionService: ProductOptionService,
 ) {
     fun findProducts(categoryId: Long, offsetLimit: OffsetLimit): PageResponse<ProductResponse> {
         val products = productService.findProducts(categoryId, offsetLimit)
@@ -36,6 +38,7 @@ class ProductAssembler(
         val sections = productSectionService.findSections(productId)
         val rateSummary = reviewService.findRateSummary(ReviewTarget(ReviewTargetType.PRODUCT, productId))
         val coupons = couponService.getCouponsForProducts(listOf(productId))
-        return ProductDetailResponse.of(product, sections, rateSummary, coupons)
+        val options = productOptionService.findOptions(productId)
+        return ProductDetailResponse.of(product, sections, rateSummary, coupons, options)
     }
 }
