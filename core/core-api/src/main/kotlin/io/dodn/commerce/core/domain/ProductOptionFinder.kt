@@ -16,7 +16,11 @@ class ProductOptionFinder(
                     productId = it.productId,
                     name = it.name,
                     description = it.description,
-                    price = it.costPrice,
+                    price = Price(
+                        costPrice = it.costPrice,
+                        salesPrice = it.salesPrice,
+                        discountedPrice = it.discountedPrice,
+                    ),
                 )
             }
     }

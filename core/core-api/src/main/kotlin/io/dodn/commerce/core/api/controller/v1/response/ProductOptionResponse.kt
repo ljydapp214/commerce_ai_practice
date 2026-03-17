@@ -8,13 +8,17 @@ data class ProductOptionResponse(
     val name: String,
     val description: String,
     val costPrice: BigDecimal,
+    val salesPrice: BigDecimal,
+    val discountedPrice: BigDecimal,
 ) {
     companion object {
         fun of(option: ProductOption): ProductOptionResponse = ProductOptionResponse(
             id = option.id,
             name = option.name,
             description = option.description,
-            costPrice = option.price,
+            costPrice = option.price.costPrice,
+            salesPrice = option.price.salesPrice,
+            discountedPrice = option.price.discountedPrice,
         )
     }
 }

@@ -11,4 +11,6 @@ class ProductOptionEntity(
     val name: String,
     val description: String,
     val costPrice: BigDecimal,
+    val salesPrice: BigDecimal,
+    val discountedPrice: BigDecimal,
 ) : BaseEntity()
